@@ -4,13 +4,13 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans 
       http://www.springframework.org/schema/beans/spring-beans.xsd http://code.alibabatech.com/schema/dubbo http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
     <!--指定要暴露的服务端口，确定名称-->
-    <dubbo:protocol name="dubbo" port="20887"/>
+    <dubbo:protocol name="dubbo" port="20880"/>
     <!--指定应用名称-->
     <dubbo:application name="health-service"/>
     <!--服务注册中心地址-->
     <dubbo:registry address="zookeeper://127.0.0.1:2181"/>
     <!--批量扫描-->
-    <dubbo:annotation package="com.lg.service"/>
+    <dubbo:annotation package="com.lg.service.Impl"/>
 
 
 </beans>
