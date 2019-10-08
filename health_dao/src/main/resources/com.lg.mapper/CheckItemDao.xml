@@ -54,4 +54,10 @@
         </set>
         where id=#{id}
     </update>
+    <select id="findAll" parameterType="com.lg.pojo.CheckItem" resultType="com.lg.pojo.CheckItem">
+        SELECT * FROM t_checkitem;
+    </select>
+    <select id="findCheckItemIdsByCheckGroupId" resultType="Integer">
+        SELECT checkitem_id FROM t_checkgroup_checkitem WHERE checkgroup_id =#{id};
+    </select>
 </mapper>

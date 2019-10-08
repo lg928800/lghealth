@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lg.mapper.CheckGroupDao">
+    <insert id="add" parameterType="com.lg.pojo.CheckGroup">
+        <selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+        INSERT INTO t_checkgroup (code,name,sex,helpCode,remark,attention)
+        VALUES (#{code},#{name},#{sex},#{helpCode},#{remark},#{attention});
+    </insert>
+    <insert id="setCheckGroupAndCheckItem" parameterType="hashmap">
+        INSERT INTO t_checkgroup_checkitem (checkgroup_id, checkitem_id) VALUES (#{checkgroup_id},#{checkitem_id});
+    </insert>
+    <select id="findPage" parameterType="string" resultType="com.lg.pojo.CheckGroup">
+        SELECT * FROM t_checkgroup
+        <where>
+            <if test="value !=null and value.length>0">
+                code = #{code} or name =#{name}
+            </if>
+        </where>
+    </select>
+    <select id="findById" parameterType="int" resultType="com.lg.pojo.CheckGroup">
+        SELECT * FROM t_checkgroup WHERE id=#{id};
+    </select>
+    <!--删除表关系-->
+    <delete id="deleteAssociation" >
+        DELETE FROM t_checkgroup_checkitem WHERE checkgroup_id =#{id}
+    </delete>
+    <!--确认后修改的信息-->
+    <update id="edit" >
+        UPDATE t_checkgroup
+        <set>
+            <if test="code!=null">
+                code = #{code},
+            </if>
+            <if test="name!=null">
+                name = #{name},
+            </if>
+            <if test="helpCode!=null">
+                helpCode = #{helpCode},
+            </if>
+            <if test="sex!=null">
+                sex = #{sex},
+            </if>
+            <if test="remark!=null">
+                remark = #{remark},
+            </if>
+            <if test="attention!=null">
+                attention = #{attention},
+            </if>
+        </set>
+         WHERE id =#{id}
+    </update>
+    <!--根据ID查询检查组是否被套餐使用-->
+    <select id="findCountById" resultType="java.lang.Integer">
+        SELECT COUNT(*) FROM t_setmeal_checkgroup WHERE checkgroup_id= #{id};
+    </select>
+    <!--根据ID删除数据-->
+    <delete id="deleteById">
+        DELETE FROM t_checkgroup WHERE id = #{id};
+    </delete>
+</mapper>

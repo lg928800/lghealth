@@ -3,6 +3,8 @@ package com.lg.service;
 import com.lg.entity.PageResult;
 import com.lg.pojo.CheckItem;
 
+import java.util.List;
+
 public interface CheckItemService {
     /**
      * 新建预约数据
@@ -24,4 +26,8 @@ public interface CheckItemService {
     CheckItem findById(Integer id);
 
     void edit(CheckItem checkItem);
+
+    List<CheckItem> findAll();
+
+    List<Integer> findCheckItemIdsByCheckGroupId(Integer id);
 }

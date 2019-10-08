@@ -4,12 +4,13 @@ import com.alibaba.dubbo.config.annotation.Service;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.lg.entity.PageResult;
-import com.lg.entity.Result;
 import com.lg.mapper.CheckItemDao;
 import com.lg.pojo.CheckItem;
 import com.lg.service.CheckItemService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 /**
  * @version V1.0
@@ -22,6 +23,20 @@ import org.springframework.transaction.annotation.Transactional;
 public class CheckItemServiceImpl implements CheckItemService {
     @Autowired
     private CheckItemDao checkItemDao;
+
+    @Override
+    public List<Integer> findCheckItemIdsByCheckGroupId(Integer id) {
+        return checkItemDao.findCheckItemIdsByCheckGroupId(id);
+    }
+
+    /**
+     * 查询检查项信息
+     */
+    @Override
+    public List<CheckItem> findAll() {
+        return checkItemDao.findAll();
+
+    }
 
     @Override
     public void edit(CheckItem checkItem) {

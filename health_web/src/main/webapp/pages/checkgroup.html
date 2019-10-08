@@ -55,7 +55,7 @@
                 <div class="box">
                     <div class="filter-container">
                         <el-input placeholder="编码/名称/助记码" v-model="pagination.queryString" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter"></el-input>
-                        <el-button @click="findPage()" class="dalfBut">查询</el-button>
+                        <el-button @click="handlefindPage()" class="dalfBut">查询</el-button>
                         <el-button type="primary" class="butT" @click="handleCreate()">新建</el-button>
                     </div>
                     <el-table size="small" current-row-key="id" :data="dataList" stripe highlight-current-row>
@@ -280,29 +280,149 @@
                 this.findPage();
             },
             methods: {
+                handlefindPage() {
+                    this.pagination.currentPage=1;
+                    this.findPage();
+                },
                 //编辑
                 handleEdit() {
+                    //编辑选项确定跳转后台
+                    //校验修改的内容
+                    //发送异步请求
+                    axios.post("/checkgroup/edit.do?checkitemIds="+this.checkitemIds,this.formData).then((res)=>{
+                        //判断是否修改成功
+                        if (res.data.flag) {
+                            //返回true则为修改成功,关闭窗口
+                            this.dialogFormVisible4Edit = false;
+                            //回显修改成功的提示
+                            this.$message.success(res.data.message);
+                        } else {
+                            //不成功报错提示
+                            this.$message.error(res.data.message)
+                        }
+
+                    })
                 },
                 //添加
                 handleAdd () {
+                    //1.校验表单,一会再写
+                    //2.发送异步请求
+                    axios.post("/checkgroup/add.do?checkitemIds=" + this.checkitemIds, this.formData).then((res) => {
+                        //后台返回数据，判断是否添加成功
+                        if (res.data.flag) {
+                            //如果添加成功则显示成功信息
+                            this.$message.success(res.data.message);
+                            //添加成功后官迷弹窗
+                            this.dialogFormVisible = false;
+                            //刷新页面
+                            this.findPage();
+                        } else {
+                        //如果没有添加成功则显示没有添加成功的信息
+                        this.$message.error(res.data.message);
+                        }
+                    });
                 },
                 //分页查询
                 findPage() {
+                    //第二次分页，先定义分页所需的参数
+                    var param ={
+                        currentPage: this.pagination.currentPage,
+                        pageSize: this.pagination.pageSize,
+                        queryString: this.pagination.queryString
+                    };
+                    //发送异步请求，将分页数据传到后台
+                    axios.post("/checkgroup/findPage.do",param).then((res)=>{
+                        //后台返回的数据响应到页面
+                        this.dataList=res.data.rows;
+                        this.pagination.total=res.data.total;
+                    })
                 },
                 // 重置表单
                 resetForm() {
+                    this.formData ={ };
                 },
                 // 弹出添加窗口
                 handleCreate() {
+                    //新增检查组
+                    //1.重置添加的表单
+                    this.resetForm();
+                    //2.弹出编辑框
+                    this.dialogFormVisible = true;
+                    this.activeNames="first";
+                    //查询检查项所有信息
+                    this.checkitemIds =[];
+                    //发送异步请求
+                    axios.get("/checkItem/findAll.do").then((res)=>{
+                        //后端返回的数据响应到添加页面上
+                        //判断是否有数据
+                        if (res.data.flag) {
+                            this.tableData = res.data.data;
+                        } else {
+                            //没有数据则回显错误信息
+                            this.$message.error(res.data.message)
+                        }
+
+                    })
                 },
                 // 弹出编辑窗口
                 handleUpdate(row) {
+                    //点击编辑框弹出编辑窗口
+                    this.dialogFormVisible4Edit = true;
+                    this.activeNames="first";
+                    //发送异步请求
+                    axios.get("/checkgroup/findById.do?id="+row.id).then((res)=>{
+                        if (res.data.flag) {
+                            //根据Id查询的结果回显到页面上
+                            this.formData = res.data.data;
+                        } else {
+                            this.$message.error(res.data.message);
+                        }
+                    });
+                    //这里重新发送异步请求，查询所有的检查项的信息
+                    axios.get("/checkItem/findAll.do").then((res)=>{
+                        if (res.data.flag) {
+                            //判断是否有数据，将数据回显到tableData属性上
+                            this.tableData = res.data.data;
+                        } else {
+                            this.$message.error(res.data.message);
+                        }
+                    });
+                    axios.get("/checkItem/findCheckItemIdsByCheckGroupId.do?id="+row.id).then((res)=>{
+                      //判断是否存在
+                        if (res.data.flag) {
+                            this.checkitemIds = res.data.data;
+                        } else {
+                            this.$message.error(res.data.message);
+                        }
+                    })
                 },
                 //切换页码
                 handleCurrentChange(currentPage) {
+                    this.pagination.currentPage=currentPage;
+                    this.findPage();
                 },
                 // 删除
                 handleDelete(row) {
+                    //删除是根据点击事件，要删除的ID传送给后台
+                    //响应页面是否要删除
+                    this.$confirm("确认要删除么？","提示",{
+                        confirmButtonText: '确定',
+                        cancelButtonText: '取消',
+                        type: 'warning'}).then(()=>{
+                        //发送异步请求
+                        axios.get("/checkgroup/deleteById.do?id="+row.id).then((res)=>{
+                            //判断是否删除成功
+                            if (res.data.flag) {
+                                //回显数据删除成功
+                                this.$message.success(res.data.message);
+                                //刷新页面
+                                this.findPage();
+                            } else {
+                                this.$message.error(res.data.message);
+                            }
+                        })
+                    })
+
                 }
             }
         })
