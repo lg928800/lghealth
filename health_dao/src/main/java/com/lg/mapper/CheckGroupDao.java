@@ -4,6 +4,7 @@ import com.github.pagehelper.Page;
 import com.lg.pojo.CheckGroup;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.List;
 import java.util.Map;
 
 public interface CheckGroupDao {
@@ -22,4 +23,6 @@ public interface CheckGroupDao {
     void deleteById(@Param("id")Integer id);
 
     Integer findCountById(@Param("id")Integer id);
+
+    List<CheckGroup> findAll();
 }

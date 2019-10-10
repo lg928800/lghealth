@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -26,6 +27,15 @@ public class CheckGroupServiceImpl implements CheckGroupService {
     //创建dao层接口实现
     @Autowired
     private CheckGroupDao checkGroupDao;
+
+    /**
+     * 查询检查组所有数据
+     */
+    @Override
+    public List<CheckGroup> findAll() {
+        return checkGroupDao.findAll();
+
+    }
 
     /**
      * 根据ID删除数据

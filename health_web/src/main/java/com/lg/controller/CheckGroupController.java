@@ -114,4 +114,23 @@ public class CheckGroupController {
         }
         return  new Result(false,MessageConstant.DELETE_CHECKGROUP_FAIL);
     }
+
+    /**
+     * 查询检查组数据并回显到页面
+     * @return
+     */
+    @GetMapping("/findAll")
+    public Result findAll() {
+        //查询检查组数据
+        try {
+            List<CheckGroup> checkGroups = checkGroupService.findAll();
+            if (checkGroups != null) {
+                return new Result(true,MessageConstant.QUERY_CHECKGROUP_SUCCESS,checkGroups);
+            }
+        } catch (Exception e) {
+            //日志打印;
+            LOGGER.error("Find checkgroup all ",e);
+        }
+            return new Result(false,MessageConstant.QUERY_CHECKGROUP_FAIL);
+    }
 }
