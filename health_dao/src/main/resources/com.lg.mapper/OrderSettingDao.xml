@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lg.mapper.OrderSettingDao">
+    <!--查询日期数量-->
+    <select id="findCountByOrderdate" parameterType="java.util.Date" resultType="long">
+        SELECT COUNT(*) FROM t_ordersetting WHERE orderDate = #{orderDate};
+    </select>
+    <!--修改日期-->
+    <update id="updateToOrderdate" parameterType="com.lg.pojo.OrderSetting">
+        UPDATE t_ordersetting SET number =#{number} WHERE orderDate =#{orderDate}
+    </update>
+    <!--添加数据-->
+    <insert id="add" parameterType="com.lg.pojo.OrderSetting">
+        INSERT INTO t_ordersetting (orderDate,number,reservations) VALUES (#{orderDate},#{number},#{reservations})
+    </insert>
+    <!--查询日期差的数据-->
+    <select id="queryBeginAndLastDate" parameterType="hashmap" resultType="com.lg.pojo.OrderSetting">
+        SELECT * FROM t_ordersetting WHERE orderDate BETWEEN #{dateBegin} and #{dateEnd};
+    </select>
+</mapper>
