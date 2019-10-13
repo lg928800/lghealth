@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import redis.clients.jedis.JedisPool;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -78,8 +79,24 @@ public class SetMealSerivceImpl implements SetMealSerivce {
                 setMealDao.setSetMealAndCheckGroupIds(map);
             }
         }
+    }
 
+    /**
+     * 通过ID查询套餐及检查表和检查组的信息
+     * @param id
+     * @return
+     */
+    @Override
+    public Setmeal findById(Integer id) {
+        return setMealDao.findById(id);
+    }
 
-
+    /**
+     * 查询套餐所有信息
+     * @return
+     */
+    @Override
+    public List<Setmeal> findAll() {
+        return setMealDao.findAll();
     }
 }
