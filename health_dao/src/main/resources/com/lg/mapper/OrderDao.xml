@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lg.mapper.OrderDao">
+    <!--根据日期查询数据-->
+    <select id="findByCondition" resultType="com.lg.pojo.Order">
+        SELECT * FROM t_order
+        <where>
+            <if test="memberId!=null">
+                member_id = #{memberId}
+            </if>
+            <if test="setmealId!=null">
+                and setmeal_id = #{setmealId}
+            </if>
+            <if test="orderDate!=null">
+                and orderDate = #{orderDate}
+            </if>
+        </where>
+    </select>
+    <insert id="add" useGeneratedKeys="true" keyProperty="id" >
+        INSERT INTO t_order VALUES (null,#{memberId},#{orderDate},#{orderType},#{orderStatus},#{setmealId})
+    </insert>
+    <select id="findById" resultType="hashmap">
+        SELECT m.name as member,ts.name as setmeal,td.orderDate,td.orderType
+          FROM t_order AS td
+        INNER JOIN t_member m ON td.member_id = m.id
+        INNER JOIN t_setmeal ts ON td.setmeal_id = ts.id
+        WHERE
+        td.id=#{id}
+    </select>
+</mapper>

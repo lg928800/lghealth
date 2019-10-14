@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lg.mapper.MemberDao">
+    <!--根据手机查询日否是会员-->
+    <select id="findByTelephone" resultType="com.lg.pojo.Member" parameterType="string">
+        SELECT * FROM t_member WHERE phoneNumber=#{telephone}
+    </select>
+    <!--添加会员信息-->
+    <insert id="add" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO t_member (fileNumber,name,sex,idCard,phoneNumber,regTime,password,email,birthday,remark)
+        VALUES (#{fileNumber},#{name},#{sex},#{idCard},#{phoneNumber},#{regTime},#{password},#{email},#{birthday},#{remark})
+    </insert>
+</mapper>

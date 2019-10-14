@@ -15,4 +15,8 @@ public interface OrderSettingDao {
     void add(OrderSetting orderSetting);
 
     List<OrderSetting> queryBeginAndLastDate(Map date);
+
+    OrderSetting findByOrderDate(Date date);
+
+    void updateReservationsByDate(OrderSetting orderSetting);
 }
