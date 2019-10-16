@@ -62,4 +62,30 @@ public class ValidateCodeController {
         }
             return new Result(true,MessageConstant.SEND_VALIDATECODE_SUCCESS);
     }
+
+    /**
+     * 登录界面手机验证码发送
+     * @param telephone
+     * @return
+     */
+    @RequestMapping("/send4Login")
+    public Result send4Login(@RequestParam String telephone) {
+        //根据前台穿过的参数,从redis中查询是否有验证码
+        String code = jedisPool.getResource().get(telephone + RedisMessageConstant.SENDTYPE_ORDER);
+        if (code != null) {
+            return new Result(false,"验证码已发送，请注意查收");
+        }
+        //否则redis中没有验证码，则需要重新发送一遍
+        Integer validateCode = ValidateCodeUtils.generateValidateCode(4);
+        try {
+            SMSUtils.sendShortMessage(SMSUtils.VALIDATE_CODE,telephone,validateCode.toString());
+            //验证码保存到redis缓存中
+            jedisPool.getResource().setex(telephone+RedisMessageConstant.SENDTYPE_ORDER,60*10,validateCode.toString());
+        } catch (ClientException e) {
+            LOGGER.error("Code send error",e);
+            return new Result(false,MessageConstant.SEND_VALIDATECODE_FAIL);
+        }
+        return new Result(true,MessageConstant.SEND_VALIDATECODE_SUCCESS);
+    }
+
 }

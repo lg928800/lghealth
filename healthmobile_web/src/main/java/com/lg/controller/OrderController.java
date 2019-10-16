@@ -35,6 +35,12 @@ public class OrderController {
     //jedisPool
     @Autowired
     private JedisPool jedisPool;
+
+    /**
+     * 提交预约信息
+     * @param map
+     * @return
+     */
     @RequestMapping("/submit")
     public Result submit(@RequestBody Map map) {
         //由于提交到后台的数据中有验证码及手机号等这些没有用Pojo来封装数据的参数，所以这里用map集合来接受参数
@@ -64,6 +70,11 @@ public class OrderController {
         return new Result(false,MessageConstant.ORDERSETTING_FAIL);
     }
 
+    /**
+     * 根据id查询3表信息，并回显到页面
+     * @param id
+     * @return
+     */
     @RequestMapping("/findById")
     public Result findById(@RequestParam("id") Integer id) {
         //预约成功后回显多表的信息，用map接收，不建议

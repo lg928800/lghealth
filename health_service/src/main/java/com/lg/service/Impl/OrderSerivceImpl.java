@@ -42,6 +42,13 @@ public class OrderSerivceImpl implements OrderService {
     @Autowired
     private MemberDao memberDao;
 
+    /**
+     * 预约信息的提交
+     *
+     * @param map
+     * @return
+     * @throws Exception
+     */
     @Override
     public Order add(Map map) throws Exception {
         //获取提交数据中的日期，查询该日期日否可预约
@@ -56,7 +63,7 @@ public class OrderSerivceImpl implements OrderService {
         //获取已预约人数
         int reservations = orderSetting.getReservations();
         //判断两者
-        if (number < reservations || number ==reservations) {
+        if (number < reservations || number == reservations) {
             throw new RuntimeException(MessageConstant.ORDER_FULL);
         }
         //获取电话号码
@@ -79,14 +86,14 @@ public class OrderSerivceImpl implements OrderService {
             order.setMemberId(member.getId());
             order.setOrderDate(date);
             order.setSetmealId(Integer.parseInt((String) map.get("setmealId")));
-            Order queryOrder =orderDao.findByCondition(order);
+            Order queryOrder = orderDao.findByCondition(order);
             //判空
             if (queryOrder != null) {
                 //如果不为空则是已经预约了当日的体检
-                throw  new RuntimeException(MessageConstant.HAS_ORDERED);
+                throw new RuntimeException(MessageConstant.HAS_ORDERED);
             }
             //更新数据
-            orderSetting.setReservations(orderSetting.getReservations()+1);
+            orderSetting.setReservations(orderSetting.getReservations() + 1);
             //修改数据库数据
             orderSettingDao.updateReservationsByDate(orderSetting);
         }
@@ -101,12 +108,19 @@ public class OrderSerivceImpl implements OrderService {
         return addOrder;
     }
 
+    /**
+     * 查询3表的信息回显到提交成功的页面上
+     *
+     * @param id
+     * @return
+     * @throws Exception
+     */
     @Override
     public Map findById(Integer id) throws Exception {
         Map map = orderDao.findById(id);
         if (map != null) {
             Date orderDate = (Date) map.get("orderDate");
-            map.put("orderDate",DateUtils.parseDate2String(orderDate));
+            map.put("orderDate", DateUtils.parseDate2String(orderDate));
         }
         return map;
     }
