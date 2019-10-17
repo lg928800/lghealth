@@ -1,19 +1,14 @@
 package com.lg.controller;
 
 import com.alibaba.dubbo.config.annotation.Reference;
-import com.aliyuncs.exceptions.ClientException;
-import com.lg.Utils.SMSUtils;
-import com.lg.Utils.ValidateCodeUtils;
 import com.lg.constant.MessageConstant;
 import com.lg.constant.RedisMessageConstant;
 import com.lg.entity.Result;
-import com.lg.pojo.Member;
-import com.lg.service.MemberSerivce;
+import com.lg.service.MemberService;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import redis.clients.jedis.JedisPool;
 
@@ -34,7 +29,7 @@ public class LoginController {
     private static final Logger LOGGER = Logger.getLogger(LoginController.class);
     //创建service层业务接口
     @Reference
-    private MemberSerivce memberSerivce;
+    private MemberService memberSerivce;
     //jedisPool
     @Autowired
     private JedisPool jedisPool;

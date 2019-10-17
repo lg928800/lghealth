@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:security="http://www.springframework.org/schema/security"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/mvc
+        http://www.springframework.org/schema/mvc/spring-mvc.xsd
+        http://code.alibabatech.com/schema/dubbo
+        http://code.alibabatech.com/schema/dubbo/dubbo.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd
+        http://www.springframework.org/schema/security
+        http://www.springframework.org/schema/security/spring-security.xsd">
+    <!--定义不用权限校验的路径-->
+    <security:http security="none" pattern="/js/**"/>
+    <security:http security="none" pattern="/css/**" />
+    <security:http security="none" pattern="/img/**" />
+    <security:http security="none" pattern="/plugins/**"/>
+    <security:http security="none" pattern="/pages/login.html"/>
+    <!--定义权限是否自动配置-->
+    <security:http auto-config="true" use-expressions="true">
+        <security:headers>
+            <security:frame-options policy="SAMEORIGIN"></security:frame-options>
+        </security:headers>
+        <!--定义权限提供者-->
+        <security:intercept-url pattern="/pages/**" access="isAuthenticated()"></security:intercept-url>
+        <!--设置登录权限配置-->
+        <security:form-login login-page="/pages/login.html"
+                             username-parameter="username"
+                             password-parameter="password"
+                             default-target-url="/pages/main.html"
+                             login-processing-url="/login.do"
+                             always-use-default-target="true"
+                             authentication-failure-url="/pages/login.html"></security:form-login>
+        <security:logout logout-url="/logout.do"
+                         logout-success-url="/pages/login.html"
+                         invalidate-session="true"></security:logout>
+        <!--关闭Csrf过滤器拦截-->
+        <security:csrf disabled="true"></security:csrf>
+
+    </security:http>
+    <!--定义认证配置-->
+    <security:authentication-manager>
+        <security:authentication-provider user-service-ref="springSecurityUserService">
+            <security:password-encoder ref="passwordEncoder"></security:password-encoder>
+        </security:authentication-provider>
+    </security:authentication-manager>
+    <!--扫描包下的路径-->
+    <!--<context:component-scan base-package="com.lg.security"></context:component-scan>-->
+    <!--配置bean-->
+    <bean id="springSecurityUserService" class="com.lg.security.SpringSecurityUserService"/>
+
+    <bean id="passwordEncoder" class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder"></bean>
+    <!--开启注解配置-->
+    <security:global-method-security pre-post-annotations="enabled"></security:global-method-security>
+</beans>

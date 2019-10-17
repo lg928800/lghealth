@@ -11,4 +11,8 @@
         INSERT INTO t_member (fileNumber,name,sex,idCard,phoneNumber,regTime,password,email,birthday,remark)
         VALUES (#{fileNumber},#{name},#{sex},#{idCard},#{phoneNumber},#{regTime},#{password},#{email},#{birthday},#{remark})
     </insert>
+    <!--查询每个月的会员数量-->
+    <select id="findByMonthCount" resultType="integer" parameterType="string">
+        SELECT COUNT(*) FROM t_member WHERE regTime BETWEEN #{monthBegin} and #{monthEnd}
+    </select>
 </mapper>

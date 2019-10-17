@@ -281,7 +281,16 @@
                         } else {
                             this.$message.error("表单校验失败")
                         }
+                    }).catch((r)=>{
+                            this.showMessage(r)
                     })
+                },showMessage(r){
+                    if(r == 'Error: Request failed with status code 403'){
+                        //权限不足
+                        this.$message.error('无访问权限');
+                    }else{
+                        this.$message.error('未知错误');
+                    }
                 },
                 //分页查询
                 findPage() {
@@ -347,6 +356,8 @@
                                 //否则是删除失败，不能删除
                                 this.$message.error(response.data.message);
                             }
+                        }).catch((r)=>{
+                            this.showMessage(r);
                         })
                     })
                 }

@@ -2,6 +2,8 @@ package com.lg.service;
 
 import java.util.Map;
 
-public interface MemberSerivce {
+public interface MemberService {
     void check(Map map);
+
+    Map getMemberReport();
 }

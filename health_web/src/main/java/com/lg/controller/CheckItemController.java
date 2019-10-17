@@ -8,6 +8,7 @@ import com.lg.entity.Result;
 import com.lg.pojo.CheckItem;
 import com.lg.service.CheckItemService;
 import org.apache.log4j.Logger;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -34,6 +35,7 @@ public class CheckItemController {
      * @param checkItem
      * @return
      */
+    @PreAuthorize("hasAuthority('CHECKITEM_ADD')")
     @RequestMapping("/add")
     public Result add(@RequestBody CheckItem checkItem) {
         //接受参数,调用service层方法
@@ -52,6 +54,7 @@ public class CheckItemController {
      * @param queryPageBean
      * @return
      */
+    @PreAuthorize("hasAuthority('CHECKITEM_QUERY')")
     @RequestMapping("findPage")
     public PageResult findPage(@RequestBody QueryPageBean queryPageBean) {
         PageResult pageResult = checkItemService.findPage(queryPageBean.getCurrentPage(),queryPageBean.getPageSize(),queryPageBean.getQueryString());
@@ -63,6 +66,7 @@ public class CheckItemController {
      * @param id
      * @return
      */
+    @PreAuthorize("hasAuthority('CHECKITEM_DELETE')")
     @RequestMapping("/delete")
     public Result deleteById(Integer id) {
         try {
@@ -98,6 +102,7 @@ public class CheckItemController {
      * @param checkItem
      * @return
      */
+    @PreAuthorize("hasAuthority('CHECKITEM_EDIT')")
     @RequestMapping("/edit")
     public Result edit(@RequestBody CheckItem checkItem) {
         try {
