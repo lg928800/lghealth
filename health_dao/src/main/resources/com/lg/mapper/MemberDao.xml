@@ -15,4 +15,14 @@
     <select id="findByMonthCount" resultType="integer" parameterType="string">
         SELECT COUNT(*) FROM t_member WHERE regTime BETWEEN #{monthBegin} and #{monthEnd}
     </select>
+    <!--查询当日新增会员数-->
+    <select id="findByTodayMember" parameterType="string" resultType="integer">
+        SELECT COUNT(id) FROM t_member WHERE regTime=#{today}
+    </select>
+    <select id="findAllMember" resultType="integer">
+        SELECT COUNT(*) FROM t_member;
+    </select>
+    <select id="findNewMemberCountAfterDate" resultType="integer">
+        SELECT COUNT(*) FROM t_member WHERE regTime >=#{date};
+    </select>
 </mapper>

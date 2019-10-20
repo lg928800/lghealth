@@ -10,6 +10,7 @@ import com.lg.pojo.CheckItem;
 import com.lg.service.CheckGroupService;
 import com.lg.service.CheckItemService;
 import org.apache.log4j.Logger;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -37,6 +38,7 @@ public class CheckGroupController {
      * @param checkGroup
      * @return
      */
+    @PreAuthorize("hasAuthority('CHECKGROUP_ADD')")
     @RequestMapping("/add")
     public Result add(@RequestParam Integer[] checkitemIds,@RequestBody CheckGroup checkGroup) {
         //调用service层方法添加信息
@@ -84,6 +86,7 @@ public class CheckGroupController {
      * @param checkGroup
      * @return
      */
+    @PreAuthorize("hasAuthority('CHECKGROUP_EDIT')")
     @RequestMapping("/edit")
     public Result edit(@RequestParam Integer[] checkitemIds, @RequestBody CheckGroup checkGroup) {
         try {
@@ -101,6 +104,7 @@ public class CheckGroupController {
      * @param id
      * @return
      */
+    @PreAuthorize("hasAuthority('CHECKGROUP_DELETE')")
     @RequestMapping("/deleteById")
     public Result deleteById(@RequestParam("id")Integer id) {
         try {

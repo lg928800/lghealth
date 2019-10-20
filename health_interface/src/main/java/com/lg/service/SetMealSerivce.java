@@ -4,6 +4,7 @@ import com.lg.entity.PageResult;
 import com.lg.pojo.Setmeal;
 
 import java.util.List;
+import java.util.Map;
 
 public interface SetMealSerivce {
     void add(Setmeal setmeal, Integer[] checkgroupIds);
@@ -12,5 +13,6 @@ public interface SetMealSerivce {
 
     List<Setmeal> findAll();
 
-    Setmeal findById(Integer id);
+    String findById(Integer id);
+
 }

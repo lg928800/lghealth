@@ -10,6 +10,8 @@ import com.lg.pojo.CheckGroup;
 import com.lg.service.CheckGroupService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
+import redis.clients.jedis.Jedis;
+import redis.clients.jedis.JedisPool;
 
 import java.util.HashMap;
 import java.util.List;
@@ -27,12 +29,20 @@ public class CheckGroupServiceImpl implements CheckGroupService {
     //创建dao层接口实现
     @Autowired
     private CheckGroupDao checkGroupDao;
+    @Autowired
+    private JedisPool jedisPool;
 
     /**
      * 查询检查组所有数据
      */
     @Override
     public List<CheckGroup> findAll() {
+/*        Jedis jedis = jedisPool.getResource();
+        String data = jedis.get("SetMeal_Data");
+        if (data == null) {
+            List<CheckGroup> list = checkGroupDao.findAll();
+            jedis.set("SetMeal_Data",list.toString());
+        }*/
         return checkGroupDao.findAll();
 
     }

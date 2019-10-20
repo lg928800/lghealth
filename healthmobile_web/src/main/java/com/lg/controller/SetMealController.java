@@ -52,7 +52,8 @@ public class SetMealController {
     @RequestMapping("/findById")
     public Result findById(@RequestParam("id") Integer id) {
         try {
-            Setmeal setmeal = setMealSerivce.findById(id);
+            //将返回值改成string类型
+            String setmeal = setMealSerivce.findById(id);
             if (setmeal != null) {
                 return new Result(true,MessageConstant.QUERY_SETMEAL_SUCCESS,setmeal);
             }

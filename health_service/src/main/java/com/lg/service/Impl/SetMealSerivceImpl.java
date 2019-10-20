@@ -5,13 +5,16 @@ import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.lg.constant.RedisConstant;
 import com.lg.entity.PageResult;
+import com.lg.mapper.OrderDao;
 import com.lg.mapper.SetMealDao;
 import com.lg.pojo.Setmeal;
 import com.lg.service.SetMealSerivce;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
+import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -81,14 +84,26 @@ public class SetMealSerivceImpl implements SetMealSerivce {
         }
     }
 
+
     /**
      * 通过ID查询套餐及检查表和检查组的信息
      * @param id
      * @return
      */
     @Override
-    public Setmeal findById(Integer id) {
-        return setMealDao.findById(id);
+    public String findById(Integer id) {
+        //从redis中获取k值
+        Jedis jedis = jedisPool.getResource();
+        String dataId = jedis.get("SetMeal_Data_Id");
+        //判断是否存在数据，如果不存在则从数据库中查询，然后添加到redis中
+        if (dataId == null) {
+            Setmeal setmeal = setMealDao.findById(id);
+            if (setmeal != null) {
+                //将数据库中的数据添加到redis中
+                jedis.set("SetMeal_Data_Id",setmeal.toString());
+            }
+        }
+        return dataId;
     }
 
     /**

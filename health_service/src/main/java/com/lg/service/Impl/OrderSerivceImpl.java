@@ -21,10 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import redis.clients.jedis.JedisPool;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @version V1.0
@@ -106,6 +103,19 @@ public class OrderSerivceImpl implements OrderService {
         addOrder.setSetmealId(Integer.parseInt((String) map.get("setmealId")));
         orderDao.add(addOrder);
         return addOrder;
+    }
+    /**
+     * 查询套餐表的数据
+     * @return
+     */
+    @Override
+    public List<Map<String, Object>> getSetmealReport() {
+
+
+        //1.根据套餐id分组查询数据多少盒名称
+        List<Map<String,Object>> map = orderDao.getSetmealReport();
+
+        return map;
     }
 
     /**

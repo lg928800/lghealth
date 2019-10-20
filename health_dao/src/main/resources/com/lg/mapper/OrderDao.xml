@@ -28,4 +28,35 @@
         WHERE
         td.id=#{id}
     </select>
+    <select id="getSetmealReport" resultType="hashmap">
+      SELECT ts.`name` AS 'name',COUNT(o.setmeal_id) AS 'value' FROM t_order o INNER JOIN t_setmeal ts ON ts.id = o.setmeal_id GROUP BY o.setmeal_id;
+    </select>
+    <!--根据当日日期查询预约人数-->
+    <select id="findTodayOrderNumber" resultType="integer">
+        SELECT COUNT(*) FROM t_order WHERE orderDate=#{today}
+    </select>
+    <!--本周预约人数-->
+    <select id="findOrderNumberAfterDate" resultType="integer">
+        SELECT COUNT(*) FROM t_order WHERE orderDate>=#{date}
+    </select>
+    <!--今日到诊人数-->
+    <select id="findTodayVisitsNumber" resultType="integer">
+        SELECT COUNT(*) FROM t_order WHERE orderDate=#{today} and orderStatus = "已到诊"
+    </select>
+    <!--本周到诊人数-->
+    <select id="findVisitsNumberAfterDate" resultType="integer">
+        SELECT COUNT(*) FROM t_order WHERE orderDate>=#{date} and orderStatus = "已到诊"
+    </select>
+    <!--热门套餐查询-->
+    <select id="findHotSetmeal" resultType="map">
+        SELECT s.name,
+                count(s.id) setmeal_count,
+                count(s.id) / (SELECT count(*) FROM t_order) AS proportion
+                FROM t_order o INNER JOIN t_setmeal s ON o.setmeal_id = s.id
+                GROUP BY
+                s.id
+               ORDER BY
+                setmeal_count DESC
+                LIMIT 0,4
+    </select>
 </mapper>
