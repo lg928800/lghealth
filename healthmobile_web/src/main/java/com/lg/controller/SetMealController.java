@@ -1,6 +1,8 @@
 package com.lg.controller;
 
 import com.alibaba.dubbo.config.annotation.Reference;
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.lg.constant.MessageConstant;
 import com.lg.entity.Result;
 import com.lg.pojo.Setmeal;
@@ -8,6 +10,7 @@ import com.lg.service.SetMealSerivce;
 import org.apache.log4j.Logger;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -34,9 +37,10 @@ public class SetMealController {
     @RequestMapping("/getSetmeal")
     public Result findAll() {
         try {
-            List<Setmeal> list = setMealSerivce.findAll();
+            String list = setMealSerivce.findAll();
+            List<Setmeal> setmealList = JSON.parseArray(list, Setmeal.class);
             if (list != null) {
-                return new Result(true, MessageConstant.QUERY_SETMEAL_SUCCESS,list);
+                return new Result(true, MessageConstant.QUERY_SETMEAL_SUCCESS,setmealList);
             }
         } catch (Exception e) {
             LOGGER.error("Find setMeal all error",e);
@@ -50,11 +54,14 @@ public class SetMealController {
      * @return
      */
     @RequestMapping("/findById")
+    @ResponseBody
     public Result findById(@RequestParam("id") Integer id) {
         try {
             //将返回值改成string类型
-            String setmeal = setMealSerivce.findById(id);
+            String data = setMealSerivce.findById(id);
+            JSONObject setmeal = JSON.parseObject(data);
             if (setmeal != null) {
+
                 return new Result(true,MessageConstant.QUERY_SETMEAL_SUCCESS,setmeal);
             }
         } catch (Exception e) {

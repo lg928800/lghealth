@@ -1,6 +1,7 @@
 package com.lg.service.Impl;
 
 import com.alibaba.dubbo.config.annotation.Service;
+import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.lg.constant.RedisConstant;
@@ -94,13 +95,15 @@ public class SetMealSerivceImpl implements SetMealSerivce {
     public String findById(Integer id) {
         //从redis中获取k值
         Jedis jedis = jedisPool.getResource();
-        String dataId = jedis.get("SetMeal_Data_Id");
+        String dataId = jedis.get("SetMeal_Data_Id"+id);
         //判断是否存在数据，如果不存在则从数据库中查询，然后添加到redis中
         if (dataId == null) {
             Setmeal setmeal = setMealDao.findById(id);
             if (setmeal != null) {
                 //将数据库中的数据添加到redis中
-                jedis.set("SetMeal_Data_Id",setmeal.toString());
+                String setdata = JSON.toJSONString(setmeal);
+                jedis.set("SetMeal_Data_Id"+id,setdata);
+                dataId=jedis.get("SetMeal_Data_Id"+id);
             }
         }
         return dataId;
@@ -111,7 +114,16 @@ public class SetMealSerivceImpl implements SetMealSerivce {
      * @return
      */
     @Override
-    public List<Setmeal> findAll() {
-        return setMealDao.findAll();
+    public String findAll() {
+        Jedis jedis = jedisPool.getResource();
+        String data = jedis.hget("SetMeal_ALL", "list_All");
+        if (data == null) {
+            List<Setmeal> setmeals = setMealDao.findAll();
+            if (setmeals != null) {
+                jedis.hset("SetMeal_ALL","list_All",JSON.toJSONString(setmeals).toString());
+                data = jedis.hget("SetMeal_ALL", "list_All");
+            }
+        }
+        return data;
     }
 }

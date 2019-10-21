@@ -19,4 +19,6 @@ public interface OrderSettingDao {
     OrderSetting findByOrderDate(Date date);
 
     void updateReservationsByDate(OrderSetting orderSetting);
+
+    void deleteOrderSettingOfDate(@Param("firstDayThisMonth") String firstDayThisMonth);
 }

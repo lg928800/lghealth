@@ -26,4 +26,8 @@
     <update id="updateReservationsByDate" parameterType="com.lg.pojo.OrderSetting">
         UPDATE t_ordersetting SET reservations=#{reservations} WHERE orderDate=#{orderDate}
     </update>
+    <!--根据当月第一天删除本月预约数据-->
+    <delete id="deleteOrderSettingOfDate" parameterType="string">
+        DELETE FROM t_ordersetting WHERE orderDate >=#{firstDayThisMonth}
+    </delete>
 </mapper>

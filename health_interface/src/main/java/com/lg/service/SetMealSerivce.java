@@ -11,7 +11,7 @@ public interface SetMealSerivce {
 
     PageResult findPage(Integer currentPage, Integer pageSize, String queryString);
 
-    List<Setmeal> findAll();
+    String findAll();
 
     String findById(Integer id);
 
